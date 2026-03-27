@@ -1,0 +1,26 @@
+flowchart LR
+    Internet((Internet))
+    FW[fw-vpn-01\nOPNsense]
+    VPN[VPN clients\n10.20.40.0/24]
+    MGMT[VLAN10 MGMT\n10.20.10.0/24]
+    USERS[VLAN30 USERS\n10.20.30.0/24]
+    SRV[VLAN20 SRV\n10.20.20.0/24]
+    ADMIN[admin-01\n10.20.10.10]
+    IDM[idm-01\n10.20.20.10]
+    CLOUD[cloud-01\n10.20.20.20]
+    LOG[log-01\n10.20.20.30]
+
+    Internet -->|1194/UDP| FW
+    FW --> MGMT
+    FW --> USERS
+    FW --> SRV
+    FW --> VPN
+    MGMT --> ADMIN
+    USERS -->|443/TCP| CLOUD
+    VPN -->|443/TCP| CLOUD
+    VPN -->|22,443| IDM
+    VPN -->|3000/TCP| LOG
+    CLOUD -->|389/636| IDM
+    FW -->|514/UDP| LOG
+    IDM -->|514/UDP| LOG
+    CLOUD -->|514/UDP| LOG
